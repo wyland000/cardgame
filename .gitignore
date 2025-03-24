@@ -1,0 +1,4 @@
+/.env
+/.env.example
+/start.bat
+/start.sh
