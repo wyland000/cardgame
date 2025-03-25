@@ -149,7 +149,9 @@ async def join_game(ctx, name=None):
     # Initialize victory counter for new player if not already present
     if name not in game.victory_counter:
         game.victory_counter[name] = 0
-    
+     # Debugging output
+    print(f"Player {name} with ID {user_id} joined the game.")
+
     await ctx.send(f"{name} has joined the game!")
 
 @bot.command(name='leave')
@@ -177,7 +179,9 @@ async def leave_game(ctx):
     # Remove the player
     if player_name in game.players:
         player = game.players.pop(player_name)
-        
+         # Debugging output
+        print(f"Player {player_name} left the game.")
+
         # Return cards to discard pile
         game.discarded_cards.extend(player.hand)
         
@@ -188,7 +192,10 @@ async def leave_game(ctx):
         await ctx.send(f"{player_name} has left the game.")
     elif player_name in game.losers:
         player = game.losers.pop(player_name)
-        
+
+         # Debugging output
+        print(f"Player {player_name} left the game (from losers).")
+
         # Return cards to discard pile
         game.discarded_cards.extend(player.hand)
         
@@ -226,6 +233,12 @@ async def start_game(ctx):
     if len(game.players) < 1:
         await ctx.send("Not enough players to start a game. At least 1 player is required.")
         return
+
+      # Debugging output: List all players before starting
+    print("Players currently in the game:")
+    
+    for name, player in game.players.items():
+        print(f"- {name} (ID: {player.user_id})")
     
     # Load and shuffle the deck
     game.reset()
@@ -421,9 +434,12 @@ async def draw_command(ctx, num_cards: int = 1):
             break
     
     if player_name is None:
+        print(f"Player {ctx.author.display_name} (ID: {user_id}) is not in the game.")
         await ctx.send("You are not in the game or have surrendered.")
         return
     
+    print(f"Player {player_name} (ID: {user_id}) is drawing cards.")
+
     await draw_cards(ctx, player_name, num_cards)
 
 @bot.command(name='discard')
